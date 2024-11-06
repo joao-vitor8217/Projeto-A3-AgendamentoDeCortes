@@ -15,8 +15,8 @@ public static class AgendamentoEndpoints
 
 
          group.MapGet("/agendamentos/{id}", async (int id, AppDbContext db) =>
-            await db.Agendamento.Include(c => c.Barbeiro).FirstOrDefaultAsync(c => c.AgendamentoId == id)
-            is Agendamento agendamento ? Results.Ok(agendamento) : Results.NotFound());
+         await db.Agendamento.Include(c => c.Barbeiro).FirstOrDefaultAsync(c => c.AgendamentoId == id)
+         is Agendamento agendamento ? Results.Ok(agendamento) : Results.NotFound("ID não encontrado."));
 
 
         group.MapPost("/agendamentos", async (Agendamento agendamento, AppDbContext db) =>
@@ -30,7 +30,7 @@ public static class AgendamentoEndpoints
        group.MapPut("/agendamentos/{id}", async (int id, Agendamento agendamentoupdate, AppDbContext db) =>
         {
             var agendamento = await db.Agendamento.FindAsync(id);
-            if (agendamento is null) return Results.NotFound();
+            if (agendamento is null) return Results.NotFound("ID não encontrado.");
 
             agendamento.Nome = agendamentoupdate.Nome;
             agendamento.TipoDeCorte = agendamentoupdate.TipoDeCorte;
@@ -44,7 +44,7 @@ public static class AgendamentoEndpoints
         group.MapDelete("/agendamentos/{id}", async (int id, AppDbContext db) =>
         {
             var agendamento = await db.Agendamento.FindAsync(id);
-            if (agendamento is null) return Results.NotFound();
+            if (agendamento is null) return Results.NotFound("ID não encontrado.");
 
             db.Agendamento.Remove(agendamento);
             await db.SaveChangesAsync();

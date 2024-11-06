@@ -9,8 +9,11 @@ public static class BarbeiroEndpoints
     {
         var group = routes.MapGroup("/api/barbeiros").WithTags(nameof(Barbeiro));
 
+        group.MapGet("/barbeiros", async (AppDbContext db) => await db.Barbeiro.ToListAsync());
+
         group.MapGet("/barbeiros/{id}", async (int id, AppDbContext db) =>
-            await db.Barbeiro.FindAsync(id) is Barbeiro barbeiro ? Results.Ok(barbeiro) : Results.NotFound());
+        await db.Barbeiro.FindAsync(id) is Barbeiro barbeiro ? 
+        Results.Ok(barbeiro) : Results.NotFound("ID nâo encontrado."));
 
         group.MapPost("/barbeiros", async (Barbeiro barbeiro, AppDbContext db) =>
         {
@@ -22,7 +25,7 @@ public static class BarbeiroEndpoints
         group.MapPut("/barbeiros/{id}", async (int id, Barbeiro barbeiroupdate, AppDbContext db) =>
         {
             var barbeiro = await db.Barbeiro.FindAsync(id);
-            if (barbeiro is null) return Results.NotFound();
+            if (barbeiro is null) return Results.NotFound("ID não encontrado.");
 
             barbeiro.BarbeiroNome = barbeiroupdate.BarbeiroNome;
       
@@ -33,7 +36,7 @@ public static class BarbeiroEndpoints
         group.MapDelete("/barbeiros/{id}", async (int id, AppDbContext db) =>
         {
             var barbeiro = await db.Barbeiro.FindAsync(id);
-            if (barbeiro is null) return Results.NotFound();
+            if (barbeiro is null) return Results.NotFound("ID não encontrado.");
 
             db.Barbeiro.Remove(barbeiro);
             await db.SaveChangesAsync();

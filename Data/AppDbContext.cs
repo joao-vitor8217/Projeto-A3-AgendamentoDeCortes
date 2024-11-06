@@ -6,7 +6,7 @@ namespace BarbeariaProjeto.Data {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<Agendamento> Agendamento { get; set; }
-    public DbSet<BarbeariaProjeto.Models.Barbeiro> Barbeiro { get; set; } = default!;
+    public DbSet<Barbeiro> Barbeiro { get; set; } = default!;
 
       }
     }
